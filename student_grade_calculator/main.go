@@ -46,15 +46,53 @@ func main() {
 			fmt.Print("\tPlease Enter a Valid Grade between 0 and 100: ")
 			fmt.Scan(&subject.grade)
 		}
-
 		stuGradeCalc.subjects = append(stuGradeCalc.subjects, subject)
 	}
 
-	fmt.Printf("\nYour average grade is %.2f.", stuGradeCalc.calculateAverageGrade())
+	// clear the console
+	fmt.Print("\033[H\033[2J")
+
+	fmt.Println("\n --- Your Grades --- ")
+	for _, subject := range stuGradeCalc.subjects {
+		fmt.Println(subject.name, " -> ", grade_calculator(subject.grade))
+	}
+
+	fmt.Printf("\nYour average grade is %v.", grade_calculator(stuGradeCalc.calculateAverageGrade()))
 }
 
 func isValidGrade(grade float64) bool {
 	return grade >= 0 && grade <= 100
+}
+
+func grade_calculator(score float64) string {
+	if score >= 85 {
+		return "A"
+	}
+	if score >= 80 {
+		return "A-"
+	}
+	if score >= 75 {
+		return "B+"
+	}
+	if score >= 68 {
+		return "B"
+	}
+	if score >= 65 {
+		return "B-"
+	}
+	if score >= 60 {
+		return "C+"
+	}
+	if score >= 50 {
+		return "C"
+	}
+	if score >= 45 {
+		return "C-"
+	}
+	if score >= 40 {
+		return "D"
+	}
+	return "F"
 }
 
 func (sgc StudentGradeCalculator) calculateAverageGrade() float64 {
