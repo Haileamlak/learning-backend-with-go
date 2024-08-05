@@ -1,4 +1,4 @@
-package main
+package student_grade_calculator
 
 import (
 	"fmt"
