@@ -10,12 +10,12 @@ func main() {
 	lib := services.NewLibrary()
 
 	// Adding some initial members
-	lib.AddMember(models.Member{ID: 1, Name: "Tamiru"})
-	lib.AddMember(models.Member{ID: 2, Name: "Haileamlak"})
-	lib.AddMember(models.Member{ID: 3, Name: "Dagmawi"})
-	lib.AddMember(models.Member{ID: 4, Name: "Dawit"})
-	lib.AddMember(models.Member{ID: 5, Name: "Alice"})
-	lib.AddMember(models.Member{ID: 6, Name: "Bob"})
+	lib.AddMember(models.Member{ID: 1, Name: "Tamiru", BorrowedBooks: map[int]models.Book{}})
+	lib.AddMember(models.Member{ID: 2, Name: "Haileamlak", BorrowedBooks: map[int]models.Book{}})
+	lib.AddMember(models.Member{ID: 3, Name: "Dagmawi", BorrowedBooks: map[int]models.Book{}})
+	lib.AddMember(models.Member{ID: 4, Name: "Dawit", BorrowedBooks: map[int]models.Book{}})
+	lib.AddMember(models.Member{ID: 5, Name: "Alice", BorrowedBooks: map[int]models.Book{}})
+	lib.AddMember(models.Member{ID: 6, Name: "Bob", BorrowedBooks: map[int]models.Book{}})
 
 	// Adding some initial books
 	lib.AddBook(models.Book{ID: 1, Title: "The Hobbit", Author: "J.R.R. Tolkien", Status: "Available"})
@@ -25,6 +25,5 @@ func main() {
 	lib.AddBook(models.Book{ID: 11, Title: "Angels & Demons", Author: "Dan Brown", Status: "Available"})
 	lib.AddBook(models.Book{ID: 12, Title: "Inferno", Author: "Dan Brown", Status: "Available"})
 
-	
 	controllers.HandleConsoleInput(lib)
 }

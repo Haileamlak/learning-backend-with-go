@@ -1,8 +1,8 @@
 package services
 
 import (
-    "errors"
-    "library_management_system/models"
+	"errors"
+	"library_management_system/models"
 )
 
 // LibraryManager defines the methods for library management
@@ -66,7 +66,10 @@ func (lib *Library) BorrowBook(bookID int, memberID int) error {
     }
 
     book.Status = "Borrowed"
+
     member.BorrowedBooks[bookID] = book
+
+	lib.books[bookID] = book
 
     return nil
 }
@@ -86,6 +89,7 @@ func (lib *Library) ReturnBook(bookID int, memberID int) error {
     }
 
     book.Status = "Available"
+	lib.books[bookID] = book
     delete(member.BorrowedBooks, bookID)
 
     return nil
