@@ -63,13 +63,16 @@ func (controller *ApiController) LoginUser(c *gin.Context) {
 }
 
 func (controller *ApiController) PromoteUser(c *gin.Context) {
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+	// Get the username from the json body
+	var username struct {
+		Username string `json:"username"`
+	}
+	if err := c.ShouldBindJSON(&username); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	err = controller.userService.PromoteUser(id)
+	err := controller.userService.PromoteUser(username.Username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

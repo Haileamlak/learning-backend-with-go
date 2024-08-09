@@ -8,7 +8,6 @@ import (
 	"task_manager/models"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -34,10 +33,10 @@ func NewUserService() *UserService {
 func (service *UserService) CreateUser(user models.User) error {
 	// check if user already exists
 	var existingUser models.User
-    err := service.collection.FindOne(context.TODO(), bson.M{"username": user.Username}).Decode(&existingUser)
-    if err == nil {
-        return fmt.Errorf("username already exists")
-    }
+	err := service.collection.FindOne(context.TODO(), bson.M{"username": user.Username}).Decode(&existingUser)
+	if err == nil {
+		return fmt.Errorf("username already exists")
+	}
 
 	// Hash the password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -80,8 +79,8 @@ func (service *UserService) AuthenticateUser(username, password string) (models.
 	return user, nil
 }
 
-func (s *UserService) PromoteUser(id primitive.ObjectID) error {
-	filter := bson.M{"_id": id}
+func (s *UserService) PromoteUser(username string) error {
+	filter := bson.M{"username": username}
 	update := bson.M{"$set": bson.M{"role": "admin"}}
 
 	_, err := s.collection.UpdateOne(context.TODO(), filter, update)

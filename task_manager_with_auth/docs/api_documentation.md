@@ -300,12 +300,16 @@ The details of each endpoint, including the request and response formats, are pr
   ```
 ### 8. Promote a User
 
-**Endpoint:** PUT /promote/:id
+**Endpoint:** PUT /promote
 
 **Description:** Promote a user to an admin.
 
-- **Path Parameters:** `id` (string): The ID of the user.
-
+- **Request:**
+  ```json
+  {
+    "username": "john_doe",
+  }
+  ```
 - **Response:**
 
 - **Status Code:** `200 OK`
