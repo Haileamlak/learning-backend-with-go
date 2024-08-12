@@ -11,7 +11,7 @@ func TestAddBook(t *testing.T) {
 
 	lib.AddBook(book)
 
-	if _, exists := lib.books[book.ID]; !exists {
+	if _, exists := lib.Books[book.ID]; !exists {
 		t.Errorf("Expected book with ID %d to be added, but it wasn't", book.ID)
 	}
 }
@@ -23,7 +23,7 @@ func TestRemoveBook(t *testing.T) {
 	lib.AddBook(book)
 	lib.RemoveBook(book.ID)
 
-	if _, exists := lib.books[book.ID]; exists {
+	if _, exists := lib.Books[book.ID]; exists {
 		t.Errorf("Expected book with ID %d to be removed, but it wasn't", book.ID)
 	}
 }
@@ -34,19 +34,19 @@ func TestBorrowBook(t *testing.T) {
 	member := models.Member{ID: 1, Name: "Alice", BorrowedBooks: map[int]models.Book{}}
 
 	lib.AddBook(book)
-	lib.members[member.ID] = member
+	lib.Members[member.ID] = member
 
 	err := lib.BorrowBook(book.ID, member.ID)
 	if err != nil {
 		t.Errorf("Expected no error, but got %v", err)
 	}
 
-	if lib.books[book.ID].Status != "Borrowed" {
-		t.Errorf("Expected book status to be 'Borrowed', but got %s", lib.books[book.ID].Status)
+	if lib.Books[book.ID].Status != "Borrowed" {
+		t.Errorf("Expected book status to be 'Borrowed', but got %s", lib.Books[book.ID].Status)
 	}
 
-	if len(lib.members[member.ID].BorrowedBooks) != 1 {
-		t.Errorf("Expected member to have 1 borrowed book, but got %d", len(lib.members[member.ID].BorrowedBooks))
+	if len(lib.Members[member.ID].BorrowedBooks) != 1 {
+		t.Errorf("Expected member to have 1 borrowed book, but got %d", len(lib.Members[member.ID].BorrowedBooks))
 	}
 }
 
@@ -56,7 +56,7 @@ func TestReturnBook(t *testing.T) {
 	member := models.Member{ID: 1, Name: "Alice", BorrowedBooks: map[int]models.Book{}}
 
 	lib.AddBook(book)
-	lib.members[member.ID] = member
+	lib.Members[member.ID] = member
 
 	lib.BorrowBook(book.ID, member.ID)
 	err := lib.ReturnBook(book.ID, member.ID)
@@ -64,12 +64,12 @@ func TestReturnBook(t *testing.T) {
 		t.Errorf("Expected no error, but got %v", err)
 	}
 
-	if lib.books[book.ID].Status != "Available" {
-		t.Errorf("Expected book status to be 'Available', but got %s", lib.books[book.ID].Status)
+	if lib.Books[book.ID].Status != "Available" {
+		t.Errorf("Expected book status to be 'Available', but got %s", lib.Books[book.ID].Status)
 	}
 
-	if len(lib.members[member.ID].BorrowedBooks) != 0 {
-		t.Errorf("Expected member to have 0 borrowed books, but got %d", len(lib.members[member.ID].BorrowedBooks))
+	if len(lib.Members[member.ID].BorrowedBooks) != 0 {
+		t.Errorf("Expected member to have 0 borrowed books, but got %d", len(lib.Members[member.ID].BorrowedBooks))
 	}
 }
 

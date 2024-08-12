@@ -25,5 +25,5 @@ func main() {
 	lib.AddBook(models.Book{ID: 11, Title: "Angels & Demons", Author: "Dan Brown", Status: "Available"})
 	lib.AddBook(models.Book{ID: 12, Title: "Inferno", Author: "Dan Brown", Status: "Available"})
 
-	controllers.HandleConsoleInput(lib)
+	controllers.HandleConsoleInput(&lib)
 }
