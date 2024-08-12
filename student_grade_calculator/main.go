@@ -1,7 +1,9 @@
-package student_grade_calculator
+package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 )
 
 type Subject struct {
@@ -16,36 +18,47 @@ type StudentGradeCalculator struct {
 }
 
 func main() {
-	stuGradeCalc := StudentGradeCalculator{}
-
+	var name string
+	var numberOfSubjects int
+	reader := bufio.NewReader(os.Stdin)
 	fmt.Println(" --- Welcome to my non-AI-powered average grade calculator --- ")
 
-	fmt.Print("Your Name Please: ")
-	fmt.Scan(&stuGradeCalc.studentName)
+	fmt.Println("Your Name Please: ")
+	name, _ = reader.ReadString('\n')
 
 	fmt.Print("Number of subjects you took: ")
-	fmt.Scan(&stuGradeCalc.numberOfSubjects)
+	fmt.Scan(&numberOfSubjects)
+	reader.ReadString('\n') // clear the newline character in the buffer
 
-	for stuGradeCalc.numberOfSubjects <= 0 {
+	for numberOfSubjects <= 0 {
 		fmt.Print("Please Enter a Valid Number of Subjects: ")
-		fmt.Scan(&stuGradeCalc.numberOfSubjects)
+		fmt.Scan(&numberOfSubjects)
+		reader.ReadString('\n') // clear the newline character in the buffer
 	}
 
-	for i := 0; i < stuGradeCalc.numberOfSubjects; i++ {
-		subject := Subject{}
+	stuGradeCalc := StudentGradeCalculator{studentName: name, numberOfSubjects: numberOfSubjects}
 
+	var subjectName string
+	var grade float64
+	for i := 0; i < numberOfSubjects; i++ {
 		fmt.Printf("Subject %v:\n", i+1)
 
 		fmt.Print("\tEnter Name: ")
-		fmt.Scan(&subject.name)
+
+		subjectName, _ = reader.ReadString('\n')
 
 		fmt.Print("\tEnter Grade (0 - 100): ")
-		fmt.Scan(&subject.grade)
+		fmt.Scan(&grade)
+		reader.ReadString('\n') // clear the newline character in the buffer
 
-		for !isValidGrade(subject.grade) {
+		for !isValidGrade(grade) {
 			fmt.Print("\tPlease Enter a Valid Grade between 0 and 100: ")
-			fmt.Scan(&subject.grade)
+			fmt.Scan(&grade)
+			reader.ReadString('\n') // clear the newline character in the buffer
+
 		}
+
+		subject := Subject{name: subjectName, grade: grade}
 		stuGradeCalc.subjects = append(stuGradeCalc.subjects, subject)
 	}
 
