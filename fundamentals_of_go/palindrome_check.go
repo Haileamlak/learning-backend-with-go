@@ -1,6 +1,8 @@
 package fundamentalsofgo
 
-import "unicode"
+import (
+	"unicode"
+)
 
 func IsPalindrome(s string) bool {
 	left, right := 0, len(s)-1
@@ -11,7 +13,7 @@ func IsPalindrome(s string) bool {
 		for left < right && !unicode.IsLetter(rune(s[right])) {
 			right--
 		}
-		if s[left] != s[right] {
+		if unicode.ToLower(rune(s[left])) != unicode.ToLower(rune(s[right])) {
 			return false
 		}
 		left++

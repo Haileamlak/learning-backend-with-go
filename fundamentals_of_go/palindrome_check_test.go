@@ -13,6 +13,7 @@ func TestIsPalindrome(t *testing.T) {
 		{"ab", false},
 		{"aba", true},
 		{"abc", false},
+		{"abA", true},
 	}
 
 	for _, test := range tests {
@@ -20,5 +21,4 @@ func TestIsPalindrome(t *testing.T) {
 			t.Errorf("IsPalindrome(%q) = %v, want %v", test.input, output, test.expected)
 		}
 	}
-
 }

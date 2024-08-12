@@ -11,10 +11,10 @@ func wordFrequency(s string) map[string]int {
 	// Normalize the string to lowercase and replace punctuation with spaces
 	var sb strings.Builder
 	for _, r := range s {
-		if unicode.IsLetter(r) {
-			sb.WriteRune(unicode.ToLower(r))
-		} else {
+		if !unicode.IsPunct(r) {
 			sb.WriteRune(' ')
+		} else {
+			sb.WriteRune(unicode.ToLower(r))
 		}
 	}
 
