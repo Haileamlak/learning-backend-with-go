@@ -54,7 +54,7 @@ func (r *userRepository) UpdateUser(id string, user domain.User)error {
 	if err != nil {
 		return &domain.BadRequestError{Message: "Invalid ID"}
 	}
-	
+	user.ID = ""
 	filter := bson.M{"_id": objId}
 	update := bson.M{"$set": user}
 	_, err = r.db.Collection("users").UpdateOne(context.TODO(), filter, update)

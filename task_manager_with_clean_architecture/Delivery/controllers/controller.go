@@ -44,6 +44,8 @@ func (c *apiController) CreateTask(ctx *gin.Context) {
 	err = c.taskUsecase.CreateTask(task)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
+		return
+
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Task created successfully"})
@@ -66,6 +68,8 @@ func (c *apiController) GetTasks(ctx *gin.Context) {
 	tasks, err := c.taskUsecase.GetTasks()
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
+		return
+
 	}
 
 	ctx.JSON(http.StatusOK, tasks)
@@ -85,6 +89,8 @@ func (c *apiController) UpdateTask(ctx *gin.Context) {
 	err = c.taskUsecase.UpdateTask(id, task)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
+		return
+
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Task updated successfully"})
@@ -96,6 +102,8 @@ func (c *apiController) DeleteTask(ctx *gin.Context) {
 	err := c.taskUsecase.DeleteTask(id)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
+		return
+
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Task deleted successfully"})
@@ -114,6 +122,7 @@ func (c *apiController) Register(ctx *gin.Context) {
 	err = c.userUsecase.Register(registerInfo.Username, registerInfo.Password)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
@@ -135,6 +144,7 @@ func (c *apiController) Login(ctx *gin.Context) {
 	token, err := c.userUsecase.Login(loginInfo.Username, loginInfo.Password)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Logged in successfully", "token": token})

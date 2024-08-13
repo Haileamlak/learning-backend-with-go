@@ -40,6 +40,7 @@ func NewTaskRepository() TaskRepository {
 
 // CreateTask creates a new task
 func (r *taskRepository) CreateTask(task domain.Task) error {
+	task.ID = ""
 	_, err := r.db.Collection("tasks").InsertOne(context.TODO(), task)
 
 	if err != nil {
