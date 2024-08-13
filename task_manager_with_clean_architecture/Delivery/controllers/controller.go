@@ -121,7 +121,10 @@ func (c *apiController) Register(ctx *gin.Context) {
 
 // Login logs in a user
 func (c *apiController) Login(ctx *gin.Context) {
-	var loginInfo domain.User
+	var loginInfo struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
 
 	err := ctx.BindJSON(&loginInfo)
 	if err != nil {

@@ -14,7 +14,7 @@ import (
 // UserRepository interface
 type UserRepository interface {
 	CreateUser(user domain.User) error
-	UpdateUser(id primitive.ObjectID, user domain.User) error
+	UpdateUser(id string, user domain.User) error
 	FindByUsername(username string) (domain.User, error)
 	CountUsers() (int64, error)
 }
@@ -49,10 +49,15 @@ func (r *userRepository) CreateUser(user domain.User)error {
 	return nil
 }
 
-func (r *userRepository) UpdateUser(id primitive.ObjectID, user domain.User)error {
-	filter := bson.M{"_id": id}
+func (r *userRepository) UpdateUser(id string, user domain.User)error {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return &domain.BadRequestError{Message: "Invalid ID"}
+	}
+	
+	filter := bson.M{"_id": objId}
 	update := bson.M{"$set": user}
-	_, err := r.db.Collection("users").UpdateOne(context.TODO(), filter, update)
+	_, err = r.db.Collection("users").UpdateOne(context.TODO(), filter, update)
 
 	if err == mongo.ErrNoDocuments {
 		return &domain.NotFoundError{Message: "User not found"}
