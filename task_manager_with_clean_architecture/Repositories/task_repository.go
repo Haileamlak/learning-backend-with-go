@@ -14,10 +14,10 @@ import (
 // TaskRepository interface
 type TaskRepository interface {
 	CreateTask(task domain.Task) error
-	GetTask(id primitive.ObjectID) (domain.Task, error)
+	GetTask(id string) (domain.Task, error)
 	GetTasks() ([]domain.Task, error)
-	UpdateTask(id primitive.ObjectID, task domain.Task) error
-	DeleteTask(id primitive.ObjectID) error
+	UpdateTask(id string, task domain.Task) error
+	DeleteTask(id string) error
 }
 
 // taskRepository struct
@@ -49,10 +49,15 @@ func (r *taskRepository) CreateTask(task domain.Task) error {
 }
 
 // GetTask retrieves a task by ID
-func (r *taskRepository) GetTask(id primitive.ObjectID) (domain.Task, error) {
-	filter := bson.M{"_id": id}
+func (r *taskRepository) GetTask(id string) (domain.Task, error) {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return domain.Task{}, &domain.BadRequestError{Message: "Invalid ID"}
+	}
+
+	filter := bson.M{"_id": objId}
 	var task domain.Task
-	err := r.db.Collection("tasks").FindOne(context.TODO(), filter).Decode(&task)
+	err = r.db.Collection("tasks").FindOne(context.TODO(), filter).Decode(&task)
 
 	if err == mongo.ErrNoDocuments {
 		return domain.Task{}, &domain.NotFoundError{Message: "Task not found"}
@@ -90,8 +95,14 @@ func (r *taskRepository) GetTasks() ([]domain.Task, error) {
 }
 
 // UpdateTask updates a task
-func (r *taskRepository) UpdateTask(id primitive.ObjectID, task domain.Task) error {
-	filter := bson.M{"_id": id}
+func (r *taskRepository) UpdateTask(id string, task domain.Task) error {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return &domain.BadRequestError{Message: "Invalid ID"}
+	}
+
+	filter := bson.M{"_id": objId}
+
 	update := bson.M{
 		"$set": bson.M{
 			"title":    task.Title,
@@ -100,7 +111,7 @@ func (r *taskRepository) UpdateTask(id primitive.ObjectID, task domain.Task) err
 		},
 	}
 
-	_, err := r.db.Collection("tasks").UpdateOne(context.TODO(), filter, update)
+	_, err = r.db.Collection("tasks").UpdateOne(context.TODO(), filter, update)
 
 	if err == mongo.ErrNoDocuments {
 		return &domain.NotFoundError{Message: "Task not found"}
@@ -113,9 +124,15 @@ func (r *taskRepository) UpdateTask(id primitive.ObjectID, task domain.Task) err
 }
 
 // DeleteTask deletes a task
-func (r *taskRepository) DeleteTask(id primitive.ObjectID) error {
-	filter := bson.M{"_id": id}
-	_, err := r.db.Collection("tasks").DeleteOne(context.TODO(), filter)
+func (r *taskRepository) DeleteTask(id string) error {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return &domain.BadRequestError{Message: "Invalid ID"}
+	}
+
+	filter := bson.M{"_id": objId}
+
+	_, err = r.db.Collection("tasks").DeleteOne(context.TODO(), filter)
 
 	if err == mongo.ErrNoDocuments {
 		return &domain.NotFoundError{Message: "Task not found"}

@@ -7,7 +7,6 @@ import (
 	usecases "task-manager/Usecases"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // ApiController interface
@@ -58,11 +57,7 @@ func (c *apiController) CreateTask(ctx *gin.Context) {
 
 // GetTask retrieves a task by ID
 func (c *apiController) GetTask(ctx *gin.Context) {
-	id, err := primitive.ObjectIDFromHex(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	id := ctx.Param("id")
 
 	task, err := c.taskUsecase.GetTask(id)
 	if err != nil {
@@ -96,14 +91,10 @@ func (c *apiController) GetTasks(ctx *gin.Context) {
 
 // UpdateTask updates a task
 func (c *apiController) UpdateTask(ctx *gin.Context) {
-	id, err := primitive.ObjectIDFromHex(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	id := ctx.Param("id")
 
 	task := domain.Task{}
-	err = ctx.BindJSON(&task)
+	err := ctx.BindJSON(&task)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -127,13 +118,8 @@ func (c *apiController) UpdateTask(ctx *gin.Context) {
 
 // DeleteTask deletes a task
 func (c *apiController) DeleteTask(ctx *gin.Context) {
-	id, err := primitive.ObjectIDFromHex(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = c.taskUsecase.DeleteTask(id)
+	id := ctx.Param("id")
+	err := c.taskUsecase.DeleteTask(id)
 	if err != nil {
 		switch err.(type) {
 		case *domain.NotFoundError:

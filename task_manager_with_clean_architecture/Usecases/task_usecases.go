@@ -3,17 +3,15 @@ package usecases
 import (
 	domain "task-manager/Domain"
 	repositories "task-manager/Repositories"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // TaskUsecase interface
 type TaskUsecase interface {
 	CreateTask(task domain.Task) error
-	GetTask(id primitive.ObjectID) (domain.Task, error)
+	GetTask(id string) (domain.Task, error)
 	GetTasks() ([]domain.Task, error)
-	UpdateTask(id primitive.ObjectID, task domain.Task) error
-	DeleteTask(id primitive.ObjectID) error
+	UpdateTask(id string, task domain.Task) error
+	DeleteTask(id string) error
 }
 
 // taskUsecase struct
@@ -44,7 +42,7 @@ func (u *taskUsecase) CreateTask(task domain.Task) error {
 }
 
 // GetTask retrieves a task by ID
-func (u *taskUsecase) GetTask(id primitive.ObjectID) (domain.Task, error) {
+func (u *taskUsecase) GetTask(id string) (domain.Task, error) {
 	return u.taskRepo.GetTask(id)
 }
 
@@ -54,7 +52,7 @@ func (u *taskUsecase) GetTasks() ([]domain.Task, error) {
 }
 
 // UpdateTask updates a task
-func (u *taskUsecase) UpdateTask(id primitive.ObjectID, task domain.Task) error {
+func (u *taskUsecase) UpdateTask(id string, task domain.Task) error {
 	if err := task.Validate(); err != nil {
 		return &domain.BadRequestError{Message: err.Error()}
 	}
@@ -63,6 +61,6 @@ func (u *taskUsecase) UpdateTask(id primitive.ObjectID, task domain.Task) error 
 }
 
 // DeleteTask deletes a task
-func (u *taskUsecase) DeleteTask(id primitive.ObjectID) error {
+func (u *taskUsecase) DeleteTask(id string) error {
 	return u.taskRepo.DeleteTask(id)
 }
