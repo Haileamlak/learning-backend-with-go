@@ -43,13 +43,7 @@ func (c *apiController) CreateTask(ctx *gin.Context) {
 
 	err = c.taskUsecase.CreateTask(task)
 	if err != nil {
-		switch err.(type) {
-		case *domain.BadRequestError:
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		case *domain.InternalServerError:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Task created successfully"})
@@ -61,13 +55,7 @@ func (c *apiController) GetTask(ctx *gin.Context) {
 
 	task, err := c.taskUsecase.GetTask(id)
 	if err != nil {
-		switch err.(type) {
-		case *domain.NotFoundError:
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		case *domain.InternalServerError:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusOK, task)
@@ -77,13 +65,7 @@ func (c *apiController) GetTask(ctx *gin.Context) {
 func (c *apiController) GetTasks(ctx *gin.Context) {
 	tasks, err := c.taskUsecase.GetTasks()
 	if err != nil {
-		switch err.(type) {
-		case *domain.NotFoundError:
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		case *domain.InternalServerError:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusOK, tasks)
@@ -102,15 +84,7 @@ func (c *apiController) UpdateTask(ctx *gin.Context) {
 
 	err = c.taskUsecase.UpdateTask(id, task)
 	if err != nil {
-		switch err.(type) {
-		case *domain.BadRequestError:
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		case *domain.NotFoundError:
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		case *domain.InternalServerError:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Task updated successfully"})
@@ -121,13 +95,7 @@ func (c *apiController) DeleteTask(ctx *gin.Context) {
 	id := ctx.Param("id")
 	err := c.taskUsecase.DeleteTask(id)
 	if err != nil {
-		switch err.(type) {
-		case *domain.NotFoundError:
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		case *domain.InternalServerError:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Task deleted successfully"})
@@ -145,13 +113,7 @@ func (c *apiController) Register(ctx *gin.Context) {
 
 	err = c.userUsecase.Register(registerInfo.Username, registerInfo.Password)
 	if err != nil {
-		switch err.(type) {
-		case *domain.BadRequestError:
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		case *domain.InternalServerError:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
@@ -169,14 +131,9 @@ func (c *apiController) Login(ctx *gin.Context) {
 
 	token, err := c.userUsecase.Login(loginInfo.Username, loginInfo.Password)
 	if err != nil {
-		switch err.(type) {
-		case *domain.BadRequestError:
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		case *domain.InternalServerError:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
 	}
+
 	ctx.JSON(http.StatusOK, gin.H{"message": "Logged in successfully", "token": token})
 }
 
@@ -193,14 +150,25 @@ func (c *apiController) PromoteUser(ctx *gin.Context) {
 
 	err = c.userUsecase.PromoteUser(userInfo.Username)
 	if err != nil {
-		switch err.(type) {
-		case *domain.NotFoundError:
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		case *domain.InternalServerError:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+		ctx.JSON(getStatusCode(err), gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "User promoted successfully"})
+}
+
+func getStatusCode(err error) int {
+	switch err.(type) {
+	case *domain.BadRequestError:
+		return http.StatusBadRequest
+	case *domain.NotFoundError:
+		return http.StatusNotFound
+	case *domain.InternalServerError:
+		return http.StatusInternalServerError
+	case *domain.UnauthorizedError:
+		return http.StatusUnauthorized
+	case *domain.ForbiddenError:
+		return http.StatusForbidden
+	default:
+		return http.StatusInternalServerError
+	}
 }
