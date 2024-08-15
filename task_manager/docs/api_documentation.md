@@ -1,8 +1,11 @@
+
+[Task Management API Documentation](https://documenter.getpostman.com/view/37482165/2sA3s7ioMo)
+
 # Task Management API Documentation
 
 ## Overview
 
-The Task Management API allows you to manage tasks with basic CRUD (Create, Read, Update, Delete) operations. This API is built using Go and the Gin framework and uses an in-memory database for data storage.
+The Task Management API is a simple RESTful API that allows you to manage tasks. You can create, read, update, and delete tasks using this API. The API is built using Go and the Gin framework and uses an in-memory database for data storage.
 
 ## Base URL
 
@@ -72,9 +75,9 @@ The base URL for all endpoints is: http://localhost:8080
 
 **Endpoint:** POST /tasks
 
-**Description:** Create a new task.
+**Description:** This endpoint allows you to create a new task. The request body should contain the details of the task to be created. The `title` field is required, while the `description`, `due_date`, and `status` fields are optional.
 
-**Request:**
+**Request:** 
 
 - **Body:**
     ```json
@@ -106,7 +109,7 @@ The base URL for all endpoints is: http://localhost:8080
 
 **Endpoint:** PUT /tasks/:id
 
-**Description:** Update the details of a specific task.
+**Description:** Update the details of a specific task. The request body should contain the updated details of the task. The `title` field is required, while the `description`, `due_date`, and `status` fields are optional.
 
 - **Path Parameters:** `id` (integer): The ID of the task.
 
@@ -140,7 +143,7 @@ The base URL for all endpoints is: http://localhost:8080
 
 **Endpoint:** DELETE /tasks/:id
 
-**Description:** Delete a specific task by its ID.
+**Description:** This endpoint allows you to delete a specific task by its ID.
 
 - **Path Parameters:** `id` (integer): The ID of the task.
 
