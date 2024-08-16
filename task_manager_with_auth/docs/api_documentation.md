@@ -50,7 +50,7 @@ To register a user, you need to send a POST request to the `/register` endpoint 
   "username": "john_doe",
   "password": "password123"
 }
-```
+``` 
 
 This will create a new user with the specified username and password. The response will include the ID of the newly created user.
 
