@@ -1,1 +1,3 @@
-This is the place where I put the projects which I worked on while learning backend-development with the GO programming language.
+### Back-end Development with Go
+
+This repository contains small projects I worked on while learning backend development using the Go programming language. 
